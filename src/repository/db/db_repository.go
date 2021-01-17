@@ -53,7 +53,8 @@ func (r *dbRepository) Create(at access_token.AccessToken) *errors.RestErr {
 		at.ClientID,
 		at.Expires,
 	).Exec(); err != nil {
-		return errors.NewInternalServerError(err.Error())
+		// return errors.NewInternalServerError(err.Error())
+		return errors.NewInternalServerError("error when trying to save access token in database", err)
 	}
 
 	return nil
