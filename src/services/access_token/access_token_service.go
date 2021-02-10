@@ -6,19 +6,19 @@ import (
 	"github.com/cmd-ctrl-q/bookstore_oauth-api/src/domain/access_token"
 	"github.com/cmd-ctrl-q/bookstore_oauth-api/src/repository/db"
 	"github.com/cmd-ctrl-q/bookstore_oauth-api/src/repository/rest"
-	"github.com/cmd-ctrl-q/bookstore_oauth-api/src/utils/errors"
+	"github.com/cmd-ctrl-q/bookstore_utils-go/rest_errors"
 )
 
 type Repository interface {
-	GetByID(string) (*access_token.AccessToken, *errors.RestErr)
-	Create(access_token.AccessToken) (*access_token.AccessToken, *errors.RestErr)
-	UpdateExpirationTime(access_token.AccessToken) *errors.RestErr
+	GetByID(string) (*access_token.AccessToken, rest_errors.RestErr)
+	Create(access_token.AccessToken) (*access_token.AccessToken, rest_errors.RestErr)
+	UpdateExpirationTime(access_token.AccessToken) rest_errors.RestErr
 }
 
 type Service interface {
-	GetByID(string) (*access_token.AccessToken, *errors.RestErr)
-	Create(access_token.AccessTokenRequest) (*access_token.AccessToken, *errors.RestErr)
-	UpdateExpirationTime(access_token.AccessToken) *errors.RestErr
+	GetByID(string) (*access_token.AccessToken, rest_errors.RestErr)
+	Create(access_token.AccessTokenRequest) (*access_token.AccessToken, rest_errors.RestErr)
+	UpdateExpirationTime(access_token.AccessToken) rest_errors.RestErr
 }
 
 type service struct {
@@ -33,10 +33,10 @@ func NewService(usersRepo rest.RestUsersRepository, dbRepo db.DbRepository) Serv
 	}
 }
 
-func (s *service) GetByID(accessTokenID string) (*access_token.AccessToken, *errors.RestErr) {
+func (s *service) GetByID(accessTokenID string) (*access_token.AccessToken, rest_errors.RestErr) {
 	accessTokenID = strings.TrimSpace(accessTokenID)
 	if len(accessTokenID) == 0 {
-		return nil, errors.NewBadRequestError("invalid access token id")
+		return nil, rest_errors.NewBadRequestError("invalid access token id")
 	}
 
 	// valid accessTokenID
@@ -48,7 +48,7 @@ func (s *service) GetByID(accessTokenID string) (*access_token.AccessToken, *err
 }
 
 // Create takes in a newly created access token as a paramater before creating it
-func (s *service) Create(request access_token.AccessTokenRequest) (*access_token.AccessToken, *errors.RestErr) {
+func (s *service) Create(request access_token.AccessTokenRequest) (*access_token.AccessToken, rest_errors.RestErr) {
 
 	// validate the request
 	if err := request.Validate(); err != nil {
@@ -78,7 +78,7 @@ func (s *service) Create(request access_token.AccessTokenRequest) (*access_token
 	return &at, nil
 }
 
-func (s *service) UpdateExpirationTime(at access_token.AccessToken) *errors.RestErr {
+func (s *service) UpdateExpirationTime(at access_token.AccessToken) rest_errors.RestErr {
 	if err := at.Validate(); err != nil {
 		return err
 	}

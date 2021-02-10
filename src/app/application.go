@@ -1,7 +1,6 @@
 package app
 
 import (
-	"github.com/cmd-ctrl-q/bookstore_oauth-api/src/clients/cassandra"
 	"github.com/cmd-ctrl-q/bookstore_oauth-api/src/http"
 	"github.com/cmd-ctrl-q/bookstore_oauth-api/src/repository/db"
 	"github.com/cmd-ctrl-q/bookstore_oauth-api/src/repository/rest"
@@ -15,8 +14,8 @@ var (
 
 // StartApplication starts the application
 func StartApplication() {
-	session := cassandra.GetSession()
-	session.Close()
+	// session := cassandra.GetSession()
+	// session.Close()
 
 	atHandler := http.NewAccessTokenHandler(access_token.NewService(rest.NewRestUsersRepository(), db.NewRepository()))
 
